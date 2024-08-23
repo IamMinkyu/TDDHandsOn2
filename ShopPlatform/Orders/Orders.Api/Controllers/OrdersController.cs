@@ -69,13 +69,19 @@ public sealed class OrdersController : Controller
             return NotFound();
         }
 
+        if (order.Status != OrderStatus.Pending)
+        {
+            return BadRequest();
+        }
+        
+
         order.Status = OrderStatus.AwaitingPayment;
         order.StartedAtUtc = DateTime.UtcNow;
         await context.SaveChangesAsync();
         return Ok();
     }
 
-    [HttpPost("handle/bank-transder-payment-completed")]
+    [HttpPost("handle/bank-transfer-payment-completed")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     public async Task<IActionResult> HandleBankTransferPaymentCompleted(
@@ -87,6 +93,11 @@ public sealed class OrdersController : Controller
         if (order == null)
         {
             return NotFound();
+        }
+
+        if (order.Status != OrderStatus.AwaitingPayment)
+        {
+            return BadRequest();
         }
 
         order.Status = OrderStatus.AwaitingShipment;
@@ -107,6 +118,11 @@ public sealed class OrdersController : Controller
         if (order == null)
         {
             return NotFound();
+        }
+
+        if (order.Status != OrderStatus.AwaitingShipment)
+        {
+            return BadRequest();
         }
 
         order.Status = OrderStatus.Completed;
