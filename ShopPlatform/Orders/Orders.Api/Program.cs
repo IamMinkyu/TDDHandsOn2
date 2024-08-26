@@ -1,4 +1,7 @@
+using Azure.Storage.Queues;
 using Microsoft.EntityFrameworkCore;
+using Orders.Events;
+using Orders.Messaging;
 
 namespace Orders;
 
@@ -11,7 +14,10 @@ public class Program
         IServiceCollection services = builder.Services;
 
         services.AddDbContext<OrdersDbContext>(ConfigureDbContextOptions);
-
+        services.AddSingleton(CreateStorageQueueBus);
+        services.AddSingleton<IBus<PaymentApproved>>(CreateStorageQueueBus);
+        services.AddSingleton<IAsyncObservable<PaymentApproved>>(CreateStorageQueueBus);
+        
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
@@ -26,7 +32,19 @@ public class Program
 
         app.UseAuthorization();
         app.MapControllers();
+        
+        PaymentApprovedEventHandler.Listen(app.Services);
+        
         app.Run();
+    }
+
+    private static StorageQueueBus CreateStorageQueueBus(IServiceProvider provider)
+    {
+        IConfiguration config = provider.GetRequiredService<IConfiguration>();
+        QueueClient client = new (
+            connectionString: config["Storage:ConnectionString"], 
+            queueName: config["Storage:Queues:PaymentApproved"]);
+        return new StorageQueueBus(client);
     }
 
     private static void ConfigureDbContextOptions(

@@ -65,8 +65,18 @@ public class Post_specs
   [Fact]
   public async Task Sut_correctly_sets_payment_transaction_id()
   {
+    //Arrange
     OrdersServer server = OrdersServer.Create();
     Guid orderId = Guid.NewGuid();
+    string paymentTransactionId = $"{Guid.NewGuid()}";
     await server.PlaceOrder(orderId);
+    
+    //Act
+    await server.StartOrder(orderId, paymentTransactionId);
+    Order? actual = await server.FindOrder(orderId);
+
+    //Assert
+    actual!.PaymentTransactionId.Should().Be(paymentTransactionId);
+
   }
 }
