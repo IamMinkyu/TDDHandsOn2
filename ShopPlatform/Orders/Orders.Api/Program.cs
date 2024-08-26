@@ -17,6 +17,7 @@ public class Program
         services.AddSingleton(CreateStorageQueueBus);
         services.AddSingleton<IBus<PaymentApproved>>(CreateStorageQueueBus);
         services.AddSingleton<IAsyncObservable<PaymentApproved>>(CreateStorageQueueBus);
+        services.AddHttpClient<SellersService>();
         
         services.AddControllers();
         services.AddEndpointsApiExplorer();
