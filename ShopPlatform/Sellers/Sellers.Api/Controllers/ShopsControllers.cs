@@ -28,7 +28,7 @@ public sealed class ShopsControllers : Controller
     }
 
     [HttpGet("{id}")]
-    [Produces("application/json", Type = typeof(Shop))]
+    [Produces("application/json", Type = typeof(ShopView))]
     [ProducesResponseType(404)]
     public async Task<IActionResult> FindShop(
         Guid id,
@@ -36,7 +36,7 @@ public sealed class ShopsControllers : Controller
     {
         return await context.Shops.FindShop(id) switch
         {
-            Shop shop => Ok(shop),
+            Shop shop => Ok(new ShopView(shop.Id, shop.Name)),
             null => NotFound(),
         };
     }
