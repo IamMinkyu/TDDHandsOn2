@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Sellers;
 
 namespace Orders;
 
@@ -38,7 +39,10 @@ public sealed class OrdersServer: TestServer
     {
       builder.ConfigureServices(services =>
       {
+        SellersServer sellersServer = SellersServer.Create();
         services.AddSingleton<IServer, OrdersServer>();
+        services.AddSingleton(sellersServer);
+        services.AddSingleton<SellersService>(new SellersService(sellersServer.CreateClient()));
       });
 
       builder.ConfigureAppConfiguration(config =>
