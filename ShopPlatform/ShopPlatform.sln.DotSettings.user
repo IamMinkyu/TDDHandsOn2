@@ -9,6 +9,7 @@
     &lt;TestAncestor&gt;
       &lt;TestId&gt;xUnit::2FB2AEDE-419C-4CF9-B6EF-B373DA36DA25::net6.0::Sellers.api.shops.id.Get_specs.Sut_does_not_expose_user_information&lt;/TestId&gt;
     &lt;/TestAncestor&gt;
+    &lt;Project Location="/Users/mklee/projects/TddStudy/TDDHandsOn2/ShopPlatform/Sellers/Sellers.UnitTests" Presentation="&amp;lt;Sellers&amp;gt;\&amp;lt;Sellers.UnitTests&amp;gt;" /&gt;
   &lt;/Or&gt;
 &lt;/SessionState&gt;</s:String>
 	<s:Int64 x:Key="/Default/Housekeeping/UnitTestingMru/UnitTestRunner/WaitIntervalForRunnerToExit/@EntryValue">10</s:Int64></wpf:ResourceDictionary>
