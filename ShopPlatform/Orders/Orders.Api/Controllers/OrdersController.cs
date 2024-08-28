@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Orders.Commands;
 using Orders.Events;
 using Orders.Messaging;
+using Sellers;
 
 namespace Orders.Controllers;
 
@@ -27,13 +28,17 @@ public sealed class OrdersController : Controller
     [ProducesResponseType(404)]
     public async Task<IActionResult> FindOrder(
         Guid id,
+        [FromServices] SellersService sellersService,
         [FromServices] OrdersDbContext context)
     {
-        return await context.Orders.FindOrder(id) switch
+        if (await context.Orders.FindOrder(id) is Order order)
         {
-            Order order => Ok(order),
-            null => NotFound(),
+            ShopView shop = await sellersService.GetShop(order.ShopId);
+            order.ShopName = shop.Name;
+            return Ok(order);
         };
+
+        return NotFound();
     }
 
     [HttpPost("{id}/place-order")]
