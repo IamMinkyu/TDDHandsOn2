@@ -1,11 +1,8 @@
 using System.Net;
-using System.Net.Http.Json;
 using FluentAssertions;
-using Orders.Commands;
-using Orders.Events;
 using Xunit;
 
-namespace Orders.api.orders.start_order;
+namespace Orders.api.orders.id.start_order;
 
 public class Post_specs
 {
